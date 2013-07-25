@@ -12,7 +12,7 @@
 
   <ul>
     <% @items.each do |item| %>
-      <li><%= item.name %> <input type="checkbox" class="box" id="<%= item.id %>"></li>
+      <p><%= item.name %> <input type="checkbox" class="box" id="<%= item.id %>"></p>
     <% end %>
   </ul>
 
@@ -34,7 +34,9 @@
       success: function(response){
 
         var todoItem = $('.submission').val();
-        $('.todolist ul').prepend("<li>" + todoItem + "<input type='checkbox' class='box' id=" + response + "> </li>");
+        $('.todolist ul').prepend("<p style='display:none'>" + todoItem + "<input type='checkbox' class='box' id=" + response + "> </p>");
+        $(".todolist ul p").slideDown();
+        $('.submission').value = '';
       },
       error: function(one, two, error){
         console.log(error);
