@@ -1,0 +1,61 @@
+<h1>To Do App</h1>
+
+<form class="todo" action="<%= items_url %>" method="post">
+
+  <input class="submission" type="text" name="item[name]">
+  <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+  <input class="newitem" type="submit" value="New Item">
+
+</form>
+
+<div class="todolist">
+
+  <ul>
+    <% @items.each do |item| %>
+      <li><%= item.name %> <input type="checkbox" class="box" id="<%= item.id %>"></li>
+    <% end %>
+  </ul>
+
+</div>
+
+<script>
+
+
+  $('.todo').on("click", ".newitem", function(event){
+    event.preventDefault();
+    var that = this;
+
+    var formData = $(this.form).serialize();
+
+    $.ajax({
+      url: that.form.action + '.json',
+      type: "POST",
+      data: formData,
+      success: function(response){
+
+        var todoItem = $('.submission').val();
+        $('.todolist ul').prepend("<li>" + todoItem + "<input type='checkbox' class='box' id=" + response + "> </li>");
+      },
+      error: function(one, two, error){
+        console.log(error);
+      }
+    });
+  });
+
+  $(document).on('change', '.box', function(){
+    if($(this).is(':checked')){
+      var that = this;
+      $.ajax({
+        url: "/items/" + that.id + '.json',
+        type: "PUT",
+        success: function(){
+          $(that).parent().hide();
+        },
+        error: function(one, two, error){
+          console.log(error);
+        }
+      });
+    };
+  });
+
+</script>
